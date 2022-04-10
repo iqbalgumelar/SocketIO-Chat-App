@@ -4,7 +4,9 @@ const express = require('express');
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
+var redis = require('socket.io-redis');
 const fs = require('fs');
+const RedisCluster = require('ioredis');
 
 app.use('/public', express.static('public'))
 
@@ -24,12 +26,19 @@ const check_key = v =>{
 	return val;
 }
 
+io.adapter(redis({ host: 'localhost', port: 6379 }));
+
+
 io.on('connection',  socket => {
+
+	
 	// when the client emits 'sendchat', this listens and executes
 	socket.on('sendchat', data => io.emit('updatechat', socket.username, data));
 
 	// when the client emits 'adduser', this listens and executes
 	socket.on('adduser', username => {
+
+        console.log("cluster2","tertriger")
 		// we store the username in the socket session for this client
 		socket.username = username;
 		// add the client's username to the global list
@@ -56,6 +65,7 @@ io.on('connection',  socket => {
 	
 	// when the user sends a private message to a user.. perform this
 	socket.on('msg_user', (to_user, from_user, msg) => {
+        console.log("cluster2","tertriger")
 		//emits 'msg_user_handle', this updates the chat body on client-side
 		io.to(usernames[to_user]).emit('msg_user_handle', from_user, msg);
 		//write the chat message to a txt file		

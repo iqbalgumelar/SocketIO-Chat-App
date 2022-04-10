@@ -65,36 +65,15 @@ class MainChat  {
 			
 			// listener, whenever the server emits 'updatechat', this updates the chat body
 			socket.on('updatechat',  (username, data) => {
-				if(username == 'Chat Bot'){
-					$('<div class="message loading new"><figure class="avatar"><img src="/public/img/sa.png" /></figure><span></span></div>').appendTo($('.mCSB_container'));
-					MainChat.updateScrollbar();
-					setTimeout( () => {
-					$('.message.loading').remove();
-					$('<div class="message new"><figure class="avatar"><img src="/public/img/sa.png" /></figure>' + data + '</div>').appendTo($('.mCSB_container')).addClass('new');
-						MainChat.setDate();
-						MainChat.updateScrollbar();
-					}, 1000 + (Math.random() * 20) * 100);
-				} else {	
-					setTimeout( () => {
-					$('.message.loading').remove();
-					$('<div class="message message-personal">' + data + '</div>').appendTo($('.mCSB_container')).addClass('new');
-						MainChat.setDate();
-						MainChat.updateScrollbar();
-					}, 100);
 					
-					setTimeout( () =>	MainChat.fakeMessage(), 1000 + (Math.random() * 20) * 100);
-				}
-			});
-			
-			// listener, whenever the server emits 'msg_user_handle', this updates the chat body
-			socket.on('msg_user_handle', (username, data) => {
 				setTimeout( () => {
 				$('.message.loading').remove();
-				$('<div class="message message-personal">' + data + '</div>').appendTo($('.mCSB_container')).addClass('new');
-					MainChat.setDate();
-					MainChat.updateScrollbar();
-				}, 1000 + (Math.random() * 20) * 100);
+				
+				
+				setTimeout( () =>	MainChat.fakeMessage(), 1000 + (Math.random() * 20) * 100);
+				
 			});
+			
 			
 			// on connection to server, ask for user's name with an anonymous callback
 			socket.on('connect', () => socket.emit('adduser', prompt("What's your name?")));
@@ -106,30 +85,7 @@ class MainChat  {
 			// listener, whenever the server emits 'store_username', this updates the username
 			socket.on('store_username', username => my_username = username);
 	}
-	
-	static updateScrollbar() {
-		$('.messages-content').mCustomScrollbar("update").mCustomScrollbar('scrollTo', 'bottom', {
-			scrollInertia: 10,timeout: 0
-		});
-	}
-	
-	// when the user sends a private msg to a user id, first find the username
-	static sendmsg (id) { 
-		socket.emit('check_user', my_username, id);
-	}
-	
-	static fakeMessage() {
-		if ($('.message-input').val() != '') return false;
-		$('<div class="message loading new"><figure class="avatar"><img src="/public/img/sa.png" /></figure><span></span></div>').appendTo($('.mCSB_container'));
-			MainChat.updateScrollbar();
-			setTimeout( () => {
-					$('.message.loading').remove();
-					$('<div class="message new"><figure class="avatar"><img src="/public/img/sa.png" /></figure>' + Fake[i] + '</div>').appendTo($('.mCSB_container')).addClass('new');
-						MainChat.setDate();
-						MainChat.updateScrollbar();
-						i++;
-			}, 1000 + (Math.random() * 20) * 100);
-	}
+
 	
 }
 
